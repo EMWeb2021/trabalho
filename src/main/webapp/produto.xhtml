@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="/WEB-INF/templates/default.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    >
+    <ui:define name="main">
+        <p:accordionPanel
+            activeIndex="-1"
+            id="accNewProduct"
+            widgetVar="accNewProduct"
+            >
+
+            <p:ajax 
+                event="tabClose"
+                listener="#{produtoBean.reset()}"
+                update=":accNewProduct:editAddProduct"
+                />
+
+            <p:tab
+                titleStyle="font-size:.85em;"
+                id="product"
+                title="#{i18n.product}"
+                >
+
+                <h:form id="editAddProduct">
+                    <p:panelGrid
+                        columns="2"
+                        styleClass="ui-noborder">
+                        <p:outputLabel for="name" value="#{i18n.name}"/>
+                        <p:inputText id="name" value="#{produtoBean.selectedProduto.nome}" styleClass="description" maxlength="50" />
+                        
+                         <p:outputLabel
+                            for="description"
+                            value="#{i18n.description}" />
+                        <p:inputText
+                            id="description"
+                            value="#{produtoBean.selectedProduto.descricao}"
+                            styleClass="description"
+                            maxlength="150" />
+                        
+                        <p:outputLabel
+                            for="cost"
+                            value="#{i18n.value}" />
+                        <p:inputNumber
+                            id="cost"
+                            value="#{produtoBean.selectedProduto.valor}"
+                            symbol="#{i18n.currencysymbol} "
+                            symbolPosition="p"
+                            decimalSeparator=","
+                            thousandSeparator="."
+                            minValue="0"
+                            maxValue="99999.99"
+                            decimalPlaces="2" />
+                        <p:outputLabel
+                            for="categories"
+                            value="#{i18n.categories}" />
+                         <p:scrollPanel
+                            style="max-height: 10em; width: 100%;">
+                            <p:selectManyCheckbox
+                                id="categories"
+                                value="#{produtoBean.selectedProduto.categorias}"
+                                converter="categoriaConverter"
+                                layout="pageDirection"
+                                styleClass="categoriesList">
+                                <!--                                <f:ajax
+                                                                    event="change"
+                                                                    listener="#{taskBean.onPersonSelected()}" />-->
+                                <f:selectItems
+                                    value="#{categoriaBean.categorias}"
+                                    var="category"
+                                    itemLabel="#{category.nome}"
+                                    itemValue="#{category}" />
+                                <f:attribute 
+                                    name="collectionType" 
+                                    value="java.util.ArrayList" />
+                            </p:selectManyCheckbox>
+                        </p:scrollPanel>
+                    </p:panelGrid>
+<!--descricao valor categorias-->
+                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
+                        <p:commandButton
+                            id="remove"
+                            disabled="#{empty produtoBean.selectedProduto.id}"
+                            title="#{i18n.remove}"
+                            icon="pi pi-trash"
+                            process="@this"
+                            action="#{produtoBean.removeCurrent()}"
+                            oncomplete="PF('accNewProduct').unselect(0)"
+                            update=":formProducts:productsTable"
+                            styleClass="rounded-button ui-button-danger">
+                            <p:confirm
+                                type="popup"
+                                header="#{i18n.confirmation}"
+                                message="#{i18n.excludemsg}"
+                                icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+
+                        &nbsp;
+
+                        <!--Cancel operation-->
+                        <p:commandButton
+                            id="cancel"
+                            title="#{i18n.cancel}"
+                            icon="pi pi-times"
+                            oncomplete="PF('accNewProduct').unselect(0)"
+                            style="color: white;"
+                            styleClass="rounded-button ui-button-info" />
+
+                        &nbsp;
+
+                        <!--Save Task-->
+                        <p:commandButton
+                            id="save"
+                            title="#{i18n.save}"
+                            icon="pi pi-save"
+                            process="@form"
+                            action="#{produtoBean.saveCurrent()}"
+                            oncomplete="PF('accNewProduct').unselect(0)"
+                            update=":formProducts:productsTable"
+                            styleClass="rounded-button ui-button-success" />
+                    </h:panelGroup>
+
+                    <p:confirmPopup 
+                        global="true">
+                        <p:commandButton 
+                            value="#{i18n.no}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-no ui-button-success"/>
+                        <p:commandButton 
+                            value="#{i18n.yes}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-yes ui-button-danger" />
+                    </p:confirmPopup>
+
+                    <p:blockUI
+                        block="editAddProduct"
+                        trigger="save">
+                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+                    </p:blockUI>
+
+                    <h:messages />
+
+                </h:form>
+
+            </p:tab>
+
+        </p:accordionPanel>
+        <h:form id="formProducts">
+            <p:dataTable
+                id="productsTable"
+                widgetVar="productsTable"
+                value="#{produtoBean.allProdutos}"
+                var="product"
+                filteredValue="#{produtoBean.filteredCategorias}"
+                reflow="true"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                currentPageReportTemplate="{startRecord}-{endRecord} #{i18n.of} {totalRecords} #{i18n.records}"
+                rowsPerPageTemplate="5,10,{ShowAll|'#{i18n.all}'}"
+                rows="10"
+                size="small"
+                >
+                <f:facet name="header">
+                    <div id="dtheader">
+                        <h2>#{i18n.products.toUpperCase()}</h2>
+
+                        <span class="filter-container ui-input-icon-left">
+                            <i class="pi pi-search" />
+                            <p:inputText 
+                                id="globalFilter" 
+                                onkeyup="PF('productsTable').filter()" 
+                                placeholder="#{i18n.search}"/>
+                        </span>
+                    </div>
+                </f:facet>
+                <p:column
+                    headerText="ID"
+                    sortBy="#{product.id}"
+                    style="width: 4em; text-align: center;">
+                    <h:outputText value="#{product.id}" />
+                </p:column>
+                <p:column 
+                    headerText="#{i18n.description}"
+                    field="nome"
+                    filterStyle="display: none;">
+                    <h:outputText 
+                        value="#{product.nome}"
+                     />
+                </p:column>
+                
+                 <p:column
+                    style="width: 10em; text-align: center;">
+                    <!--Edit Task 1-->
+                    <p:commandButton 
+                        icon="pi pi-pencil" 
+                        process="@this"
+                        onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
+                        oncomplete="PF('accNewProduct').select(0)"
+                        actionListener="#{produtoBean.loadProdutoWithCategorias(product)}"
+                        update=":accNewProduct:editAddProduct"
+                        styleClass="rounded-button ui-button-help">
+                        
+                    </p:commandButton>&nbsp;
+
+                    
+
+                    <!--Delete Task-->
+                    <p:commandButton
+                        id="remove"
+                        title="#{i18n.remove}"
+                        icon="pi pi-trash"
+                        process="@this"
+                        action="#{produtoBean.remove(product)}"
+                        update=":formProducts:productsTable"
+                        styleClass="rounded-button ui-button-danger">
+                        <p:confirm
+                            type="popup"
+                            header="#{i18n.confirmation}"
+                            message="#{i18n.excludemsg}"
+                            icon="pi pi-exclamation-triangle"
+                            />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            
+             <p:confirmPopup 
+                global="true">
+                <p:commandButton 
+                    value="#{i18n.no}" 
+                    type="button" 
+                    styleClass="ui-confirm-popup-no ui-button-success"/>
+                <p:commandButton 
+                    value="#{i18n.yes}" 
+                    type="button" 
+                    styleClass="ui-confirm-popup-yes ui-button-danger" />
+            </p:confirmPopup>
+        </h:form>
+    </ui:define>
+</ui:composition>
+
