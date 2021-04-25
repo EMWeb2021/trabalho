@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="/WEB-INF/templates/default.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    >
+    <ui:define name="main">
+        <div>
+            <h:form id="formProducts">
+            <p:dataView
+                var="product"
+                value="#{produtoBean.allProdutos}"
+                                
+                >      
+                               
+                <p:dataViewListItem class="product-list-item">
+                    <div class="product-list-detail">
+                        <div class="product-name">#{product.nome}</div>
+                        <div class="product-description">#{product.descricao}</div>
+                    </div>
+                    <div class="product-list-action">
+                        <h:outputText value="#{product.valor}" styleClass="product-price">
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                        <p:commandButton value="Adicionar"
+                                         actionListener="#{pedidoBean.addItem(product)}"                        
+                                         update=":cartView:itensForm:itensData @obs(totalValueEvent)"
+                                         icon="pi pi-shopping-cart"
+                                         >
+                        </p:commandButton>
+                        
+                    </div>
+                </p:dataViewListItem>
+                
+                
+            </p:dataView>
+            
+                </h:form>
+                
+         </div>
+        
+        <p:accordionPanel
+            activeIndex="1"
+            id="cartView"
+            widgetVar="cartView"
+            
+            >
+            <p:ajax 
+                event="tabClose"
+                update=":cartView"
+                />
+            
+            <p:tab titleStyle="font-size:.85em;"
+                id="itens"
+                title="Carrinho" >
+                <h:form id="itensForm">
+                    
+                 <p:outputLabel
+                            for="address"
+                            value="Endereço" />
+                        <p:inputText
+                            id="address"
+                            value="#{pedidoBean.selectedPedido.endereco}"
+                            styleClass="description"
+                            maxlength="150" />
+                  <p:outputLabel
+                            for="observation"
+                            value="Observação" />
+                        <p:inputText
+                            id="observation"
+                            value="#{pedidoBean.selectedPedido.observacao}"
+                            styleClass="description"
+                            maxlength="150" />
+            <p:dataView
+                var="item"
+                id="itensData"
+                value="#{pedidoBean.selectedPedido.itens}"       
+                listIcon="pi pi-bars"      
+                
+                >
+                
+                <p:dataViewListItem >
+                    <div class="product-list-detail">
+                        <div class="product-name">#{item.produto.nome}</div>
+                        <div class="product-description">#{item.produto.descricao}</div>
+                    </div>
+                    <div class="product-list-action">
+                        
+                        <h:outputText value="#{item.produto.valor}" styleClass="product-price">
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                        <div class="quantidade">
+                            <p:commandButton 
+                                            process="@this"
+                                            update="itensData @obs(totalValueEvent)"
+                                            icon="fas fa-plus"  
+                                            oncomplete="PF"
+                                             actionListener="#{pedidoBean.addItem(item.produto)}"                                             
+                                         >
+                            </p:commandButton>
+                            <h:outputText value="#{item.quantidade}" styleClass="product-quantidade">
+                            
+                        </h:outputText>
+                            <p:commandButton 
+                                             icon="fas fa-minus"    
+                                             process="@this"
+                                             update="itensData @obs(totalValueEvent)"                                             
+                                             action="#{pedidoBean.removeItem(item)}"
+                                         >
+                            </p:commandButton>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </p:dataViewListItem>
+                
+                
+            </p:dataView>
+                        
+                        <div class="total-price">Total: 
+                            <h:outputText id="totalValue" value="#{pedidoBean.totalValue()}" styleClass="product-price">
+                               <p:autoUpdate on="totalValueEvent" />
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                        </div>
+                        
+                        <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
+                        
+                        <!--Save Task-->
+                        <p:commandButton
+                            id="save"
+                            title="#{i18n.save}"
+                            icon="pi pi-save"
+                            process="@form"
+                            action="#{pedidoBean.saveCurrent()}"
+                            
+                            styleClass="rounded-button ui-button-success" />
+                    </h:panelGroup>
+                    </h:form>
+            </p:tab>
+            
+        </p:accordionPanel>
+       
+    </ui:define>
+</ui:composition>
+

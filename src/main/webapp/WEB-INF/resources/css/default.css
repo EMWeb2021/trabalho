@@ -68,3 +68,47 @@ div#dtheader h2 {
     justify-content: center;
     align-items: center;
 }
+
+.ui-dataview.ui-dataview-list .ui-dataview-row {
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+    width: 100%;
+}
+
+.product-list-detail{
+    display: flex ;
+    flex-direction: column;    
+    
+}
+
+.product-list-action{
+    display: flex;
+    flex-direction: column;
+    justify-content:  center;
+}
+
+.product-price {
+    margin: 5px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.product-name {
+    margin: 5px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.product-description {
+    margin: 5px;
+    font-size: 18px;
+}
+
+.product-quantidade {
+    margin: 5px;
+    font-size: 24px;
+    text-align: center;
+}

@@ -5,6 +5,7 @@
  */
 package Produto;
 
+import ItemPedido.ItemPedido;
 import Categoria.Categoria;
 import Entidade.JpaEntity;
 import java.io.Serializable;
@@ -74,10 +75,23 @@ public class Produto extends JpaEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name="categoria_id"))
     private List<Categoria> categorias;
 
+    @OneToMany(fetch = FetchType.EAGER,mappedBy="produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemPedido> itensPedidos;
+
+    public List<ItemPedido> getItensPedidos() {
+        return itensPedidos;
+    }
+
+    public void setItensPedidos(List<ItemPedido> itensPedidos) {
+        this.itensPedidos = itensPedidos;
+    }    
+    
+    
     public Produto(){
         super();
         valor = BigDecimal.ZERO;
         categorias = new ArrayList<Categoria>();
+        itensPedidos = new ArrayList<ItemPedido>();
     }
     
     public String getNome() {
@@ -138,7 +152,7 @@ public class Produto extends JpaEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "src.Produto[ id=" + getId() + " ]";
+        return "src.Produto[ id=" + getId() + ", nome = " + nome + " ]";
     }
     
 }
