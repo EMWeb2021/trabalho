@@ -28,6 +28,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
@@ -37,34 +38,37 @@ import javax.validation.constraints.NotEmpty;
  * @author enio1
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(
-            name = "produto.findAll",
-            query = "select distinct p from Produto p "
-                + "left join fetch p.categorias "
-                + "order by p.id"
-    ),
-    @NamedQuery(
-            name = "produto.loadProdutoByIdWithCategorias",
-            query = "select distinct p from Produto p "
-                + "left join fetch p.categorias "
-                + "where p.id = :id "
-                + "order by p.id"
-    )
-})
+@Table
 public class ItemPedido extends JpaEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
   
     @Column
-    @NotEmpty
     private int quantidade;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "pedido_id")
     private Pedido pedido;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "produto_id")
     private Produto produto;
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
 
     public ItemPedido(){
         super();
@@ -79,6 +83,9 @@ public class ItemPedido extends JpaEntity implements Serializable {
         this.quantidade = quantidade;
     }   
     
+    public void add(int quantidade){
+        this.quantidade += quantidade;
+    }
 
      @Override
     public int hashCode() {
@@ -104,7 +111,7 @@ public class ItemPedido extends JpaEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "src.Produto[ id=" + getId() + " ]";
+        return "src.Item[ id=" + getId() + ", produto = " + produto.toString()+", quantidade= "+quantidade+" ]";
     }
     
 }

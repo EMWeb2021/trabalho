@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="/WEB-INF/templates/default.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    >
+    <ui:define name="main">
+               
+        <h:form id="pedidosForm">
+            <p:dataTable
+                id="pedidosTable"
+                widgetVar="pedidosTable"
+                value="#{pedidoBean.allPedidos}"
+                var="pedido"
+                filteredValue="#{pedidoBean.filteredPedidos}"
+                reflow="true"
+                paginator="true"
+                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                currentPageReportTemplate="{startRecord}-{endRecord} #{i18n.of} {totalRecords} #{i18n.records}"
+                rowsPerPageTemplate="5,10,{ShowAll|'#{i18n.all}'}"
+                rows="10"
+                size="small"
+                >
+                <f:facet name="header">
+                    <div id="dtheader">
+                        <h2>PEDIDOS</h2>
+
+                        <span class="filter-container ui-input-icon-left">
+                            <i class="pi pi-search" />
+                            <p:inputText 
+                                id="globalFilter" 
+                                onkeyup="PF('pedidosTable').filter()" 
+                                placeholder="#{i18n.search}"/>
+                        </span>
+                    </div>
+                </f:facet>
+                <p:column
+                    headerText="ID"
+                    sortBy="#{pedido.id}"
+                    style="width: 4em; text-align: center;">
+                    <h:outputText value="#{pedido.id}" />
+                </p:column>
+                <p:column 
+                    headerText="Endereco"
+                    field="nome"
+                    filterStyle="display: none;">
+                    <h:outputText 
+                        value="#{pedido.endereco}"
+                     />
+                </p:column>
+                <p:column
+                    style="width: 10em; text-align: center;">
+                    <!--Edit Task 1-->
+                    <p:commandButton 
+                        icon="pi pi-pencil" 
+                        
+                        onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
+                        update=":infoPedido"
+                        actionListener="#{pedidoBean.loadPedido(pedido)}"
+                        onclick="PF('dialogPedido').show()"
+                        styleClass="rounded-button ui-button-help">
+                        
+                    </p:commandButton>&nbsp;
+
+                </p:column>
+                
+               
+            </p:dataTable>
+            
+            
+        </h:form>
+        
+        <p:dialog 
+            fitViewport="true"
+            responsive="true"
+             widgetVar="dialogPedido" minHeight="40" showEffect="fade" modal="true">
+            <h:form id="infoPedido">
+                
+                <div class="address">Endereço: 
+                    <h:outputText id="address" value="#{pedidoBean.selectedPedido.endereco}" styleClass="product-price">
+                               <p:autoUpdate on="updateModal" />
+                            
+                        </h:outputText>
+                </div>
+                 <div class="observation">Observação 
+                     <h:outputText id="observation" value="#{pedidoBean.selectedPedido.observacao}" styleClass="product-price">
+                               <p:autoUpdate on="updateModal" />
+                            
+                        </h:outputText>
+                </div>
+                <div class="observation">Total: 
+                    <h:outputText id="totalValue" value="#{pedidoBean.totalValue()}" styleClass="product-price">
+                               <p:autoUpdate on="updateModal" />
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                </div>
+                <div class="data">Data: 
+                    <h:outputText id="data" value="#{pedidoBean.selectedPedido.dataPedido}" styleClass="product-price">
+                               <p:autoUpdate on="updateModal" />
+                            
+                        </h:outputText>
+                </div>
+ 
+            <p:dataView
+                var="item"
+                id="itensData"
+                value="#{pedidoBean.selectedPedido.itens}"       
+                listIcon="pi pi-bars"
+                >
+                
+                <p:dataViewListItem class="product-list-item">
+                    <div class="product-list-detail">
+                        <div class="product-name">#{item.produto.nome}</div>
+                        <div class="product-description">#{item.produto.descricao}</div>
+                    </div>
+                    <div class="product-list-action">
+                        <h:outputText value="#{item.quantidade}" styleClass="product-price">
+                            
+                        </h:outputText>
+                        <h:outputText value="#{item.produto.valor}" styleClass="product-price">
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                       
+                        
+                    </div>
+                    
+                </p:dataViewListItem>
+                
+                
+            </p:dataView>
+            </h:form>
+</p:dialog>
+        
+    </ui:define>
+</ui:composition>
+

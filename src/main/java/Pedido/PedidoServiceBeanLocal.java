@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ItemPedido;
+package Pedido;
 
-import Produto.*;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -14,11 +13,12 @@ import javax.ejb.Local;
  * @author enio1
  */
 @Local
-public interface ItemPedidoServiceBeanLocal {
-   
-    public void save(ItemPedido item);
+public interface PedidoServiceBeanLocal {
+    public void save(Pedido pedido);
     
-    public void delete(ItemPedido item);
+    public void delete(Pedido pedido);
     
-        
+    public List<Pedido> findAll();
+    
+    public Pedido loadPedidoById(Long id);
 }
