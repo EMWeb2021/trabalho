@@ -1,3 +1,6 @@
+*{
+    box-sizing: border-box;
+}
 body, header, footer {
     margin: 0;
     padding: 1em .5em;
@@ -12,10 +15,13 @@ header {
     /*position: relative;*/
     background-color: #036fab;
     color: white;
+    display: flex;
+
 }
 
 main {
     background-color: #dddddd;
+   
 
 }
 
