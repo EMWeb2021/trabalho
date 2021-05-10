@@ -9,22 +9,32 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.security.enterprise.SecurityContext;
+import javax.servlet.ServletException;
 
 /**
  *
  * @author enio1
  */
 @Named(value = "administradorBean")
-@ViewScoped
+@RequestScoped
 public class AdministradorBean implements Serializable {
 
    @Inject
    private AdministradorServiceBeanLocal administradorService;
+   
+   @Inject
+    SecurityContext securityContext;
+   
+   @Inject
+    FacesContext facesContext;
    
    private Administrador selectedAdministrador;
    
@@ -144,5 +154,20 @@ public class AdministradorBean implements Serializable {
         }else{
             return null;
         }
+    }
+     
+      public boolean isAuthenticated() {
+        return securityContext.getCallerPrincipal() != null;
+    }
+
+    public boolean isAllowedToSeeUsers() {
+        return securityContext.isCallerInRole("admin");
+    }
+
+    public String logout() throws ServletException {
+        System.out.println("fazendo logout...");
+        facesContext.getExternalContext()
+                .invalidateSession();
+        return "/login?faces-redirect=true";
     }
 }

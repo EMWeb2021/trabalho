@@ -34,21 +34,39 @@
                     </p:button>&nbsp;
                      <p:button 
                         icon="fas fa-location-arrow" 
-                        outcome="pedido"            
-                        value="Novo pedido"
+                        outcome="listaPedidos"         
+                        value="Lista pedidos"
                         styleClass="ui-button-info">
 
-                    </p:button>&nbsp;
+                    </p:button>&nbsp;                
                     
-                   <p:button 
-                        icon="fas fa-user" 
-                        outcome="login"
-                        value="Login Administração"
+                    <p:button 
+                        icon="fas fa-hamburger" 
+                        outcome="produto"            
+                        value="#{i18n.product}"
                         styleClass="ui-button-info">
 
                     </p:button>&nbsp;
-                   
-                   
+                    <p:button 
+                        icon="fas fa-list" 
+                        outcome="categoria"
+
+                        value="#{i18n.category}"
+                        styleClass="ui-button-info">
+
+                    </p:button>&nbsp;
+                    <p:button 
+                        icon="fas fa-user" 
+                        outcome="register"
+                        value="#{i18n.manager}"
+                        styleClass="ui-button-info">
+
+                    </p:button>&nbsp;
+                      <h:form>
+            <p:commandButton 
+                            value="Logout" 
+                            action="#{administradorBean.logout()}"/>
+        </h:form>
                 </ui:insert>
             </header>
 

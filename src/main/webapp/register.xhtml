@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    template="/WEB-INF/templates/default.xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+    >
+    <ui:define name="main">
+        
+        <h:form id="editAddManager">
+                    <p:panelGrid
+                        columns="2"
+                        styleClass="ui-noborder">
+                        <p:outputLabel for="name" value="#{i18n.name}"/>
+                        <p:inputText id="name" value="#{administradorBean.selectedAdministrador.nome}" styleClass="description" maxlength="50" />
+                        
+                         <p:outputLabel
+                            for="user"
+                            value="#{i18n.user}" />
+                        <p:inputText
+                            id="user"
+                            value="#{administradorBean.selectedAdministrador.usuario}"
+                            styleClass="description"
+                            maxlength="150" />
+                        
+                  <p:outputLabel
+                            for="password"
+                            value="#{i18n.password}" />
+                <p:password
+                    id="password"
+                    feedback="true"
+                    toggleMask="true"
+                    redisplay="true"
+                    value="#{administradorBean.selectedAdministrador.senha}"
+                            styleClass="description" /> 
+                        
+                       
+                        
+                        
+                    </p:panelGrid>
+                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
+                        <p:commandButton
+                            id="remove"
+                            disabled="#{empty administradorBean.selectedAdministrador.id}"
+                            title="#{i18n.remove}"
+                            icon="pi pi-trash"
+                            process="@this"
+                            action="#{administradorBean.removeCurrent()}"
+                            
+                            
+                            styleClass="rounded-button ui-button-danger">
+                            <p:confirm
+                                type="popup"
+                                header="#{i18n.confirmation}"
+                                message="#{i18n.excludemsg}"
+                                icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+
+                        &nbsp;
+
+                        <!--Cancel operation-->
+                        <p:commandButton
+                            id="cancel"
+                            title="#{i18n.cancel}"
+                            icon="pi pi-times"
+                            
+                            style="color: white;"
+                            styleClass="rounded-button ui-button-info" />
+
+                        &nbsp;
+
+                        <!--Save Task-->
+                        <p:commandButton
+                            id="save"
+                            title="#{i18n.save}"
+                            icon="pi pi-save"
+                            process="@form"
+                            action="#{administradorBean.saveCurrent()}"
+                                         
+                            styleClass="rounded-button ui-button-success" />
+                    </h:panelGroup>
+
+                    <p:confirmPopup 
+                        global="true">
+                        <p:commandButton 
+                            value="#{i18n.no}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-no ui-button-success"/>
+                        <p:commandButton 
+                            value="#{i18n.yes}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-yes ui-button-danger" />
+                    </p:confirmPopup>
+
+                    <p:blockUI
+                        block="editAddManager"
+                        trigger="save">
+                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+                    </p:blockUI>
+
+                    <h:messages />
+
+                </h:form>
+    </ui:define>
+</ui:composition>
+

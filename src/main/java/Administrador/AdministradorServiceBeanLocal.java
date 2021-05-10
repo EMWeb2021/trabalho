@@ -16,7 +16,7 @@ import javax.ejb.Local;
 public interface AdministradorServiceBeanLocal {
    public List<Administrador> findAll();
    
-   public void save(Administrador administrador);
+   public Administrador save(Administrador administrador);
    
    public void delete(Administrador administrador);
    
