@@ -8,6 +8,7 @@ package Administrador;
 import Entidade.JpaEntity;
 import java.io.Serializable;
 import java.util.Objects;
+import javax.inject.Inject;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,20 +38,36 @@ import javax.validation.constraints.NotEmpty;
 })
 public class Administrador extends JpaEntity implements Serializable {
 
+    
     private static final long serialVersionUID = 1L;
     
     @Column(nullable = false, length = 50)
     @NotEmpty
     private String nome;
     
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique=true)
     @NotEmpty
     private String usuario;
     
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false)
     @NotEmpty
     private String senha;
 
+    @Column(nullable = false)
+    private String grupo;
+    
+    public Administrador() {
+        grupo = "admin";
+    }
+
+    public Administrador(String nome, String usuario, String senha, String grupo) {
+        this.nome = nome;
+        this.usuario = usuario;
+        this.senha = senha;
+        this.grupo = "admin";
+    }
+    
+    
     public String getNome() {
         return nome;
     }
@@ -74,6 +91,14 @@ public class Administrador extends JpaEntity implements Serializable {
     public void setSenha(String senha) {
         this.senha = senha;
     }   
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
     
     
     @Override
@@ -102,5 +127,7 @@ public class Administrador extends JpaEntity implements Serializable {
     public String toString() {
         return "src.Administrador[ id=" + getId() + " ]";
     }
+    
+    
     
 }

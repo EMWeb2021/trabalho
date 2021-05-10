@@ -5,10 +5,14 @@
  */
 package Administrador;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
 /**
  *
@@ -20,6 +24,9 @@ public class AdministradorServiceBean implements AdministradorServiceBeanLocal {
     @PersistenceContext
     private EntityManager entityManager;
 
+     @Inject
+     Pbkdf2PasswordHash passwordHasher;
+    
     @Override
     public List<Administrador> findAll() {
         return entityManager
@@ -30,25 +37,25 @@ public class AdministradorServiceBean implements AdministradorServiceBeanLocal {
     }
 
     @Override
-    public void save(Administrador administrador) {
-        if (entityManager.contains(administrador)) {
-            // Update attached -- Ever used??
-            System.out.println("AdministradorServiceBean::save[U].task => " + administrador);
-            entityManager.persist(administrador);
-        } else if (administrador.getId() != null) {
-            // Detached entity
-            System.out.println("AdministradorServiceBean::save[U'].task => " + administrador);
-            entityManager.merge(administrador);
-        } else {
-            // Create new
-            System.out.println("AdministradorServiceBean::save[S].task => " + administrador);
+    public Administrador save(Administrador administrador) {
+        
+       System.out.println("Indo salvar o admin: " + administrador.getNome() );
+        
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("Pbkdf2PasswordHash.Iterations", "3071");
+        parameters.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
+        parameters.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
+        passwordHasher.initialize(parameters);
 
-            // entityManager.persist(task);
-            // Forces the merge to all related entities
-            // (CascadeType.ALL) and avoids an exception.
-            // However performance degrades. Review required.
-            entityManager.merge(administrador);
-        }
+        Administrador newAdministrador = new Administrador(
+                administrador.getNome(),
+                administrador.getUsuario(),
+                passwordHasher.generate(
+                        administrador.getSenha().toCharArray()),
+                administrador.getGrupo());
+        entityManager.persist(newAdministrador);
+
+        return newAdministrador;
     }
 
     @Override

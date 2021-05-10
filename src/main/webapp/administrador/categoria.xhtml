@@ -3,7 +3,7 @@
 <ui:composition
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-    template="/WEB-INF/templates/default.xhtml"
+   template="../WEB-INF/templates/defaultAuthenticated.xhtml"
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:p="http://primefaces.org/ui"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
@@ -12,87 +12,40 @@
     <ui:define name="main">
         <p:accordionPanel
             activeIndex="-1"
-            id="accNewProduct"
-            widgetVar="accNewProduct"
+            id="accNewCategory"
+            widgetVar="accNewCategory"
             >
 
             <p:ajax 
                 event="tabClose"
-                listener="#{produtoBean.reset()}"
-                update=":accNewProduct:editAddProduct"
+                listener="#{categoriaBean.reset()}"
+                update=":accNewCategory:editAddCategory"
                 />
 
             <p:tab
                 titleStyle="font-size:.85em;"
-                id="product"
-                title="#{i18n.product}"
+                id="category"
+                title="#{i18n.category}"
                 >
 
-                <h:form id="editAddProduct">
+                <h:form id="editAddCategory">
                     <p:panelGrid
                         columns="2"
                         styleClass="ui-noborder">
                         <p:outputLabel for="name" value="#{i18n.name}"/>
-                        <p:inputText id="name" value="#{produtoBean.selectedProduto.nome}" styleClass="description" maxlength="50" />
-                        
-                         <p:outputLabel
-                            for="description"
-                            value="#{i18n.description}" />
-                        <p:inputText
-                            id="description"
-                            value="#{produtoBean.selectedProduto.descricao}"
-                            styleClass="description"
-                            maxlength="150" />
-                        
-                        <p:outputLabel
-                            for="cost"
-                            value="#{i18n.value}" />
-                        <p:inputNumber
-                            id="cost"
-                            value="#{produtoBean.selectedProduto.valor}"
-                            symbol="#{i18n.currencysymbol} "
-                            symbolPosition="p"
-                            decimalSeparator=","
-                            thousandSeparator="."
-                            minValue="0"
-                            maxValue="99999.99"
-                            decimalPlaces="2" />
-                        <p:outputLabel
-                            for="categories"
-                            value="#{i18n.categories}" />
-                         <p:scrollPanel
-                            style="max-height: 10em; width: 100%;">
-                            <p:selectManyCheckbox
-                                id="categories"
-                                value="#{produtoBean.selectedProduto.categorias}"
-                                converter="categoriaConverter"
-                                layout="pageDirection"
-                                styleClass="categoriesList">
-                                <!--                                <f:ajax
-                                                                    event="change"
-                                                                    listener="#{taskBean.onPersonSelected()}" />-->
-                                <f:selectItems
-                                    value="#{categoriaBean.categorias}"
-                                    var="category"
-                                    itemLabel="#{category.nome}"
-                                    itemValue="#{category}" />
-                                <f:attribute 
-                                    name="collectionType" 
-                                    value="java.util.ArrayList" />
-                            </p:selectManyCheckbox>
-                        </p:scrollPanel>
+                        <p:inputText id="name" value="#{categoriaBean.selectedCategoria.nome}" styleClass="description" maxlength="50" />
                     </p:panelGrid>
-<!--descricao valor categorias-->
+
                     <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
                         <p:commandButton
                             id="remove"
-                            disabled="#{empty produtoBean.selectedProduto.id}"
+                            disabled="#{empty categoriaBean.selectedCategoria.id}"
                             title="#{i18n.remove}"
                             icon="pi pi-trash"
                             process="@this"
-                            action="#{produtoBean.removeCurrent()}"
-                            oncomplete="PF('accNewProduct').unselect(0)"
-                            update=":formProducts:productsTable"
+                            action="#{categoriaBean.removeCurrent()}"
+                            oncomplete="PF('accNewCategory').unselect(0)"
+                            update=":formCategories:categoriesTable"
                             styleClass="rounded-button ui-button-danger">
                             <p:confirm
                                 type="popup"
@@ -108,7 +61,7 @@
                             id="cancel"
                             title="#{i18n.cancel}"
                             icon="pi pi-times"
-                            oncomplete="PF('accNewProduct').unselect(0)"
+                            oncomplete="PF('accNewCategory').unselect(0)"
                             style="color: white;"
                             styleClass="rounded-button ui-button-info" />
 
@@ -120,9 +73,9 @@
                             title="#{i18n.save}"
                             icon="pi pi-save"
                             process="@form"
-                            action="#{produtoBean.saveCurrent()}"
-                            oncomplete="PF('accNewProduct').unselect(0)"
-                            update=":formProducts:productsTable"
+                            action="#{categoriaBean.saveCurrent()}"
+                            oncomplete="PF('accNewCategory').unselect(0)"
+                            update=":formCategories:categoriesTable"
                             styleClass="rounded-button ui-button-success" />
                     </h:panelGroup>
 
@@ -139,7 +92,7 @@
                     </p:confirmPopup>
 
                     <p:blockUI
-                        block="editAddProduct"
+                        block="editAddCategory"
                         trigger="save">
                         <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
                     </p:blockUI>
@@ -151,13 +104,13 @@
             </p:tab>
 
         </p:accordionPanel>
-        <h:form id="formProducts">
+        <h:form id="formCategories">
             <p:dataTable
-                id="productsTable"
-                widgetVar="productsTable"
-                value="#{produtoBean.allProdutos}"
-                var="product"
-                filteredValue="#{produtoBean.filteredCategorias}"
+                id="categoriesTable"
+                widgetVar="categoriesTable"
+                value="#{categoriaBean.categorias}"
+                var="category"
+                filteredValue="#{categoriaBean.filteredCategorias}"
                 reflow="true"
                 paginator="true"
                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -168,29 +121,29 @@
                 >
                 <f:facet name="header">
                     <div id="dtheader">
-                        <h2>#{i18n.products.toUpperCase()}</h2>
+                        <h2>#{i18n.categories.toUpperCase()}</h2>
 
                         <span class="filter-container ui-input-icon-left">
                             <i class="pi pi-search" />
                             <p:inputText 
                                 id="globalFilter" 
-                                onkeyup="PF('productsTable').filter()" 
+                                onkeyup="PF('categoriesTable').filter()" 
                                 placeholder="#{i18n.search}"/>
                         </span>
                     </div>
                 </f:facet>
                 <p:column
                     headerText="ID"
-                    sortBy="#{product.id}"
+                    sortBy="#{category.id}"
                     style="width: 4em; text-align: center;">
-                    <h:outputText value="#{product.id}" />
+                    <h:outputText value="#{category.id}" />
                 </p:column>
                 <p:column 
                     headerText="#{i18n.description}"
                     field="nome"
                     filterStyle="display: none;">
                     <h:outputText 
-                        value="#{product.nome}"
+                        value="#{category.nome}"
                      />
                 </p:column>
                 
@@ -201,9 +154,9 @@
                         icon="pi pi-pencil" 
                         process="@this"
                         onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
-                        oncomplete="PF('accNewProduct').select(0)"
-                        actionListener="#{produtoBean.loadProdutoWithCategorias(product)}"
-                        update=":accNewProduct:editAddProduct"
+                        oncomplete="PF('accNewCategory').select(0)"
+                        actionListener="#{categoriaBean.loadCategoria(category)}"
+                        update=":accNewCategory:editAddCategory"
                         styleClass="rounded-button ui-button-help">
                         
                     </p:commandButton>&nbsp;
@@ -216,8 +169,8 @@
                         title="#{i18n.remove}"
                         icon="pi pi-trash"
                         process="@this"
-                        action="#{produtoBean.remove(product)}"
-                        update=":formProducts:productsTable"
+                        action="#{categoriaBean.remove(category)}"
+                        update=":formCategories:categoriesTable"
                         styleClass="rounded-button ui-button-danger">
                         <p:confirm
                             type="popup"
