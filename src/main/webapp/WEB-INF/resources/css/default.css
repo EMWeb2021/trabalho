@@ -1,5 +1,7 @@
+
 * {
     font-family: sans-serif;
+    box-sizing: border-box;
 }
 
 body, header, footer {
@@ -15,10 +17,13 @@ header {
     /*position: relative;*/
     background-color: #036fab;
     color: white;
+    display: flex;
+
 }
 
 main {
     background-color: #dddddd;
+   
 
 }
 
