@@ -1,11 +1,14 @@
+* {
+    font-family: sans-serif;
+}
+
 body, header, footer {
     margin: 0;
-    padding: 1em .5em;
+   
 }
 
 body {
     background-color: #ffffff;
-    padding: 1em;
 }
 
 header {

@@ -1,5 +1,76 @@
 
-div#content {
-    max-width: 800px;
-    margin: 0 auto;
+.content-administration {
+    max-width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: row;    
+    height: 100%;
+}
+.sidebar {
+    width: 170px;
+    min-width: 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.1rem;
+    padding-top: 2rem;
+    border: 1px solid #dee2e6;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.menu-lateral {
+    margin-top: 2rem;
+    border: none !important;
+    width: 100% !important;
+}
+
+.logo {
+    width: 90px;
+}
+
+div#conteudo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #FAF8F9;
+}
+
+div#conteudo > header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-content: center;
+    margin: 0;
+    height: 50px;
+    background: #ffffff;
+    
+}
+
+.buttonLogout {
+    height: 30px;
+    margin: auto;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    border: 1px solid #E78F34 !important;
+    background-color: #E78F34 !important;
+    margin-right:  20px !important;
+   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+div#conteudo > footer {
+    display: flex;
+    flex-direction: row-reverse;
+    align-content: center;
+    margin-top: auto;
+    margin-bottom: 0;
+    height: 50px;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+}
+
+div#conteudo > main {
+    overflow: auto;
+    max-height: 100%;
 }

@@ -22,61 +22,58 @@
         <title>#{i18n.title}</title>
     </h:head>
     <h:body>
-        <div id="content">
-            <header>
-                <ui:insert name="header">
-                    <p:button 
-                        icon="pi pi-fw pi-home" 
+        <div class="content-administration">
+            <div class="sidebar">
+                <p:graphicImage name="logo.png" library="images" class="logo"/>
+                <p:menu class="menu-lateral">
+                    <p:menuitem 
+                        icon="pi pi-fw pi-home"
                         outcome="index"            
                         value="Home"
-                        styleClass="ui-button-info">
-
-                    </p:button>&nbsp;
-                     <p:button 
+                        />
+                    <p:menuitem 
                         icon="fas fa-location-arrow" 
                         outcome="listaPedidos"         
                         value="Lista pedidos"
-                        styleClass="ui-button-info">
-
-                    </p:button>&nbsp;                
-                    
-                    <p:button 
+                        />
+                    <p:menuitem 
                         icon="fas fa-hamburger" 
                         outcome="produto"            
-                        value="#{i18n.product}"
-                        styleClass="ui-button-info">
-
-                    </p:button>&nbsp;
-                    <p:button 
+                        value="Produtos"
+                        />
+                    <p:menuitem 
                         icon="fas fa-list" 
                         outcome="categoria"
-
-                        value="#{i18n.category}"
-                        styleClass="ui-button-info">
-
-                    </p:button>&nbsp;
-                    <p:button 
+                        value="Categorias"
+                        />
+                    <p:menuitem 
                         icon="fas fa-user" 
                         outcome="register"
-                        value="#{i18n.manager}"
-                        styleClass="ui-button-info">
+                        value="Usuários"
+                        />
+                </p:menu>
+            </div>
+            <div id="conteudo">
+                <header>                              
+                    <h:form style="margin: 0; display: flex; flex-direction: column;
+                            justify-content: center;">                           
+                            <p:commandButton 
+                                styleClass="buttonLogout"
+                                icon="fas fa-sign-out-alt"
+                                value="Logout" 
+                                action="#{administradorBean.logout()}"/>
+                        </h:form>                    
+                </header>
 
-                    </p:button>&nbsp;
-                      <h:form>
-            <p:commandButton 
-                            value="Logout" 
-                            action="#{administradorBean.logout()}"/>
-        </h:form>
-                </ui:insert>
-            </header>
+                <main>
+                    <ui:insert name="main">Main</ui:insert>
+                </main>
 
-            <main>
-                <ui:insert name="main">Main</ui:insert>
-            </main>
+                <footer>
+                   <p>Desenvolvido por Ênio e Mayara</p>
+                </footer>
+            </div>
 
-            <footer>
-                <ui:insert name="footer">Footer</ui:insert>
-            </footer>
         </div>
     </h:body>
 </html>
