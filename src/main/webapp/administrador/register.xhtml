@@ -10,117 +10,14 @@
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     >
     <ui:define name="main">
-        <p:accordionPanel
-            activeIndex="-1"
-            id="accNewManager"
-            widgetVar="accNewManager"
-            >
-
-            <p:ajax 
-                event="tabClose"
-                listener="#{administradorBean.reset()}"
-                update=":accNewManager:editAddManager"
-                />
-
-            <p:tab
-                titleStyle="font-size:.85em;"
-                id="manager"
-                title="#{i18n.manager}"
-                >
-
-                <h:form id="editAddManager">
-                    <p:panelGrid
-                        columns="2"
-                        styleClass="ui-noborder">
-                        <p:outputLabel for="name" value="#{i18n.name}"/>
-                        <p:inputText id="name" value="#{administradorBean.selectedAdministrador.nome}" styleClass="description" maxlength="50" />
-                        
-                         <p:outputLabel
-                            for="user"
-                            value="#{i18n.user}" />
-                        <p:inputText
-                            id="user"
-                            value="#{administradorBean.selectedAdministrador.usuario}"
-                            styleClass="description"
-                            maxlength="150" />
-                        
-                        <p:outputLabel
-                            for="password"
-                            value="#{i18n.password}" />
-                        <p:inputText
-                            id="password"
-                            value="#{administradorBean.selectedAdministrador.senha}"
-                            styleClass="description"             
-                          />
-                    </p:panelGrid>
-                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
-                        <p:commandButton
-                            id="remove"
-                            disabled="#{empty administradorBean.selectedAdministrador.id}"
-                            title="#{i18n.remove}"
-                            icon="pi pi-trash"
-                            process="@this"
-                            action="#{administradorBean.removeCurrent()}"
-                            oncomplete="PF('accNewManager').unselect(0)"
-                            update=":formManagers:managersTable"
-                            styleClass="rounded-button ui-button-danger">
-                            <p:confirm
-                                type="popup"
-                                header="#{i18n.confirmation}"
-                                message="#{i18n.excludemsg}"
-                                icon="pi pi-exclamation-triangle" />
-                        </p:commandButton>
-
-                        &nbsp;
-
-                        <!--Cancel operation-->
-                        <p:commandButton
-                            id="cancel"
-                            title="#{i18n.cancel}"
-                            icon="pi pi-times"
-                            oncomplete="PF('accNewManager').unselect(0)"
-                            style="color: white;"
-                            styleClass="rounded-button ui-button-info" />
-
-                        &nbsp;
-
-                        <!--Save Task-->
-                        <p:commandButton
-                            id="save"
-                            title="#{i18n.save}"
-                            icon="pi pi-save"
-                            process="@form"
-                            action="#{administradorBean.saveCurrent()}"
-                            oncomplete="PF('accNewManager').unselect(0)"
-                            update=":formManagers:managersTable"
-                            styleClass="rounded-button ui-button-success" />
-                    </h:panelGroup>
-
-                    <p:confirmPopup 
-                        global="true">
-                        <p:commandButton 
-                            value="#{i18n.no}" 
-                            type="button" 
-                            styleClass="ui-confirm-popup-no ui-button-success"/>
-                        <p:commandButton 
-                            value="#{i18n.yes}" 
-                            type="button" 
-                            styleClass="ui-confirm-popup-yes ui-button-danger" />
-                    </p:confirmPopup>
-
-                    <p:blockUI
-                        block="editAddManager"
-                        trigger="save">
-                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
-                    </p:blockUI>
-
-                    <h:messages />
-
-                </h:form>
-
-            </p:tab>
-
-        </p:accordionPanel>
+        
+        <div class="menu-add">
+            <p:commandButton styleClass="buttonLogout" value="Adicionar usuário" type="button" icon="fas fa-plus" onclick="PF('dlg2').show()"/>
+        </div>
+        
+        
+        
+        
         <h:form id="formManagers">
             <p:dataTable
                 id="managersTable"
@@ -170,9 +67,9 @@
                         icon="pi pi-pencil" 
                         process="@this"
                         onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
-                        oncomplete="PF('accNewManager').select(0)"
+                        oncomplete="PF('dlg2').show()"
                         actionListener="#{administradorBean.loadAdministrador(manager)}"
-                        update=":accNewManager:editAddManager"
+                        update=":editAddManager"
                         styleClass="rounded-button ui-button-help">
                         
                     </p:commandButton>&nbsp;
@@ -210,6 +107,111 @@
                     styleClass="ui-confirm-popup-yes ui-button-danger" />
             </p:confirmPopup>
         </h:form>
+        
+        <p:dialog 
+            header="Adicionar usuário" 
+            widgetVar="dlg2" 
+            showEffect="fade" 
+            modal="true"
+            onHide="#{administradorBean.reset()}"
+            >
+            
+             <p:ajax 
+                event="close"
+                listener="#{administradorBean.reset()}"
+                update=":editAddManager"
+                />
+            <h:form id="editAddManager">
+                    <p:panelGrid
+                        columns="2"
+                        styleClass="ui-noborder">
+                        <p:outputLabel for="name" value="#{i18n.name}"/>
+                        <p:inputText id="name" value="#{administradorBean.selectedAdministrador.nome}" styleClass="description" maxlength="50" />
+                        
+                         <p:outputLabel
+                            for="user"
+                            value="#{i18n.user}" />
+                        <p:inputText
+                            id="user"
+                            value="#{administradorBean.selectedAdministrador.usuario}"
+                            styleClass="description"
+                            maxlength="150" />
+                        
+                        <p:outputLabel
+                            for="password"
+                            value="#{i18n.password}" />
+                        <p:password
+                            id="password"
+                            value="#{administradorBean.selectedAdministrador.senha}"
+                            styleClass="description"             
+                          />
+                    </p:panelGrid>
+                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
+                        <p:commandButton
+                            id="remove"
+                            disabled="#{empty administradorBean.selectedAdministrador.id}"
+                            title="#{i18n.remove}"
+                            icon="pi pi-trash"
+                            process="@this"
+                            action="#{administradorBean.removeCurrent()}"
+                            oncomplete="PF('dlg2').hide()"
+                            update=":formManagers:managersTable"
+                            styleClass="rounded-button ui-button-danger">
+                            <p:confirm
+                                type="popup"
+                                header="#{i18n.confirmation}"
+                                message="#{i18n.excludemsg}"
+                                icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+
+                        &nbsp;
+
+                        <!--Cancel operation-->
+                        <p:commandButton
+                            id="cancel"
+                            title="#{i18n.cancel}"
+                            icon="pi pi-times"
+                            oncomplete="PF('dlg2').hide()"
+                            style="color: white;"
+                            styleClass="rounded-button ui-button-info" />
+
+                        &nbsp;
+
+                        <!--Save Task-->
+                        <p:commandButton
+                            id="save"
+                            title="#{i18n.save}"
+                            icon="pi pi-save"
+                            process="@form"
+                            action="#{administradorBean.saveCurrent()}"
+                            oncomplete="PF('dlg2').hide()"
+                            update=":formManagers:managersTable"
+                            styleClass="rounded-button ui-button-success" />
+                    </h:panelGroup>
+
+                    <p:confirmPopup 
+                        global="true">
+                        <p:commandButton 
+                            value="#{i18n.no}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-no ui-button-success"/>
+                        <p:commandButton 
+                            value="#{i18n.yes}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-yes ui-button-danger" />
+                    </p:confirmPopup>
+
+                    <p:blockUI
+                        block="editAddManager"
+                        trigger="save">
+                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+                    </p:blockUI>
+
+                    <h:messages />
+
+                </h:form>
+        </p:dialog>
+        
     </ui:define>
 </ui:composition>
 

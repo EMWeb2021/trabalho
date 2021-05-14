@@ -148,8 +148,10 @@ public class AdministradorBean implements Serializable {
      
      public Administrador loadAdministrador(Administrador administrador){
         if(administrador != null){
-            Administrador fullCategoria = administradorService.findAdministradorById(administrador.getId());
-            selectedAdministrador = fullCategoria;
+            Administrador fullAdministrador = administradorService.findAdministradorById(administrador.getId());
+            fullAdministrador.setSenha(null);
+            selectedAdministrador = fullAdministrador;
+            
             return selectedAdministrador;
         }else{
             return null;

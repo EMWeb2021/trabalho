@@ -5,6 +5,7 @@
  */
 package Produto;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -12,11 +13,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.UploadedFile;
 
 /**
  *
  * @author enio1
  */
+
 @Named(value = "produtoBean")
 @ApplicationScoped
 public class ProdutoBean implements Serializable{
@@ -139,5 +144,6 @@ public class ProdutoBean implements Serializable{
         System.out.println("ProdutoBean::onCategoriaSelected/Produto = > " + selectedProduto);
         System.out.println("ProdutoBean::onCategoriaSelected/Categorias = > " + selectedProduto.getCategorias());
     }
+    
     
 }

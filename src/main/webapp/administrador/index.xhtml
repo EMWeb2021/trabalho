@@ -7,8 +7,16 @@
     xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <ui:define name="main">
-        <h1>Esta é a página de administrador do sistema <br></br>
-                 Use o menu acima para navegar. </h1>
+        <div class="dashboard">
+            <div class="card-dashboard">
+                <h3>Produtos<br/>cadastrados</h3>
+                <h:outputText class="count-info" value="#{produtoBean.allProdutos.size()}"/>
+            </div>
+            <div class="card-dashboard">
+                <h3>Pedidos<br/>realizados</h3>
+                <h:outputText class="count-info" value="#{pedidoBean.allPedidos.size()}"/>
+            </div>
+        </div>
        
         
     </ui:define>
