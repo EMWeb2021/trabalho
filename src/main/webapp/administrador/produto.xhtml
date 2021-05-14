@@ -10,147 +10,11 @@
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     >
     <ui:define name="main">
-        <p:accordionPanel
-            activeIndex="-1"
-            id="accNewProduct"
-            widgetVar="accNewProduct"
-            >
+        <div class="menu-add">
+            <p:commandButton 
+                styleClass="buttonLogout" value="Adicionar produto" type="button" icon="fas fa-plus" onclick="PF('dlg2').show()"/>
+        </div>
 
-            <p:ajax 
-                event="tabClose"
-                listener="#{produtoBean.reset()}"
-                update=":accNewProduct:editAddProduct"
-                />
-
-            <p:tab
-                titleStyle="font-size:.85em;"
-                id="product"
-                title="#{i18n.product}"
-                >
-
-                <h:form id="editAddProduct">
-                    <p:panelGrid
-                        columns="2"
-                        styleClass="ui-noborder">
-                        <p:outputLabel for="name" value="#{i18n.name}"/>
-                        <p:inputText id="name" value="#{produtoBean.selectedProduto.nome}" styleClass="description" maxlength="50" />
-                        
-                         <p:outputLabel
-                            for="description"
-                            value="#{i18n.description}" />
-                        <p:inputText
-                            id="description"
-                            value="#{produtoBean.selectedProduto.descricao}"
-                            styleClass="description"
-                            maxlength="150" />
-                        
-                        <p:outputLabel
-                            for="cost"
-                            value="#{i18n.value}" />
-                        <p:inputNumber
-                            id="cost"
-                            value="#{produtoBean.selectedProduto.valor}"
-                            symbol="#{i18n.currencysymbol} "
-                            symbolPosition="p"
-                            decimalSeparator=","
-                            thousandSeparator="."
-                            minValue="0"
-                            maxValue="99999.99"
-                            decimalPlaces="2" />
-                        <p:outputLabel
-                            for="categories"
-                            value="#{i18n.categories}" />
-                         <p:scrollPanel
-                            style="max-height: 10em; width: 100%;">
-                            <p:selectManyCheckbox
-                                id="categories"
-                                value="#{produtoBean.selectedProduto.categorias}"
-                                converter="categoriaConverter"
-                                layout="pageDirection"
-                                styleClass="categoriesList">
-                                <!--                                <f:ajax
-                                                                    event="change"
-                                                                    listener="#{taskBean.onPersonSelected()}" />-->
-                                <f:selectItems
-                                    value="#{categoriaBean.categorias}"
-                                    var="category"
-                                    itemLabel="#{category.nome}"
-                                    itemValue="#{category}" />
-                                <f:attribute 
-                                    name="collectionType" 
-                                    value="java.util.ArrayList" />
-                            </p:selectManyCheckbox>
-                        </p:scrollPanel>
-                    </p:panelGrid>
-<!--descricao valor categorias-->
-                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
-                        <p:commandButton
-                            id="remove"
-                            disabled="#{empty produtoBean.selectedProduto.id}"
-                            title="#{i18n.remove}"
-                            icon="pi pi-trash"
-                            process="@this"
-                            action="#{produtoBean.removeCurrent()}"
-                            oncomplete="PF('accNewProduct').unselect(0)"
-                            update=":formProducts:productsTable"
-                            styleClass="rounded-button ui-button-danger">
-                            <p:confirm
-                                type="popup"
-                                header="#{i18n.confirmation}"
-                                message="#{i18n.excludemsg}"
-                                icon="pi pi-exclamation-triangle" />
-                        </p:commandButton>
-
-                        &nbsp;
-
-                        <!--Cancel operation-->
-                        <p:commandButton
-                            id="cancel"
-                            title="#{i18n.cancel}"
-                            icon="pi pi-times"
-                            oncomplete="PF('accNewProduct').unselect(0)"
-                            style="color: white;"
-                            styleClass="rounded-button ui-button-info" />
-
-                        &nbsp;
-
-                        <!--Save Task-->
-                        <p:commandButton
-                            id="save"
-                            title="#{i18n.save}"
-                            icon="pi pi-save"
-                            process="@form"
-                            action="#{produtoBean.saveCurrent()}"
-                            oncomplete="PF('accNewProduct').unselect(0)"
-                            update=":formProducts:productsTable"
-                            styleClass="rounded-button ui-button-success" />
-                    </h:panelGroup>
-
-                    <p:confirmPopup 
-                        global="true">
-                        <p:commandButton 
-                            value="#{i18n.no}" 
-                            type="button" 
-                            styleClass="ui-confirm-popup-no ui-button-success"/>
-                        <p:commandButton 
-                            value="#{i18n.yes}" 
-                            type="button" 
-                            styleClass="ui-confirm-popup-yes ui-button-danger" />
-                    </p:confirmPopup>
-
-                    <p:blockUI
-                        block="editAddProduct"
-                        trigger="save">
-                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
-                    </p:blockUI>
-
-                    <h:messages />
-
-                </h:form>
-
-            </p:tab>
-
-        </p:accordionPanel>
         <h:form id="formProducts">
             <p:dataTable
                 id="productsTable"
@@ -191,24 +55,30 @@
                     filterStyle="display: none;">
                     <h:outputText 
                         value="#{product.nome}"
-                     />
+                        />
                 </p:column>
-                
-                 <p:column
+                <p:column 
+                    headerText="Preço"
+                    field="valor"
+                    filterStyle="display: none;">
+                    <h:outputText value="#{product.valor}" styleClass="product-price">
+                        <f:convertNumber currencySymbol="$" type="currency"/>
+                    </h:outputText>
+                </p:column>
+
+                <p:column
                     style="width: 10em; text-align: center;">
                     <!--Edit Task 1-->
                     <p:commandButton 
                         icon="pi pi-pencil" 
                         process="@this"
                         onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
-                        oncomplete="PF('accNewProduct').select(0)"
+                        oncomplete="PF('dlg2').show()"
                         actionListener="#{produtoBean.loadProdutoWithCategorias(product)}"
-                        update=":accNewProduct:editAddProduct"
+                        update=":editAddProduct"
                         styleClass="rounded-button ui-button-help">
-                        
-                    </p:commandButton>&nbsp;
 
-                    
+                    </p:commandButton>&nbsp;
 
                     <!--Delete Task-->
                     <p:commandButton
@@ -228,8 +98,8 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-            
-             <p:confirmPopup 
+
+            <p:confirmPopup 
                 global="true">
                 <p:commandButton 
                     value="#{i18n.no}" 
@@ -241,6 +111,139 @@
                     styleClass="ui-confirm-popup-yes ui-button-danger" />
             </p:confirmPopup>
         </h:form>
+
+        <p:dialog 
+            header="Adicionar produto" 
+            widgetVar="dlg2" 
+            showEffect="fade" 
+            modal="true"
+            onHide="#{produtoBean.reset()}"
+            >
+
+
+
+            <h:form id="editAddProduct">
+
+                <p:panelGrid
+                    columns="2"
+                    styleClass="ui-noborder">
+
+                    <p:outputLabel for="name" value="#{i18n.name}"/>
+                    <p:inputText id="name" value="#{produtoBean.selectedProduto.nome}" styleClass="description" maxlength="50" />
+
+                    <p:outputLabel
+                        for="description"
+                        value="#{i18n.description}" />
+                    <p:inputText
+                        id="description"
+                        value="#{produtoBean.selectedProduto.descricao}"
+                        styleClass="description"
+                        maxlength="150" />
+
+                    <p:outputLabel
+                        for="cost"
+                        value="#{i18n.value}" />
+                    <p:inputNumber
+                        id="cost"
+                        value="#{produtoBean.selectedProduto.valor}"
+                        symbol="#{i18n.currencysymbol} "
+                        symbolPosition="p"
+                        decimalSeparator=","
+                        thousandSeparator="."
+                        minValue="0"
+                        maxValue="99999.99"
+                        decimalPlaces="2" />
+                    <p:outputLabel
+                        for="categories"
+                        value="#{i18n.categories}" />
+                    <p:scrollPanel
+                        style="max-height: 10em; width: 100%;">
+                        <p:selectManyCheckbox
+                            id="categories"
+                            value="#{produtoBean.selectedProduto.categorias}"
+                            converter="categoriaConverter"
+                            layout="pageDirection"
+                            styleClass="categoriesList">
+                            <!--                                <f:ajax
+                                                                event="change"
+                                                                listener="#{taskBean.onPersonSelected()}" />-->
+                            <f:selectItems
+                                value="#{categoriaBean.categorias}"
+                                var="category"
+                                itemLabel="#{category.nome}"
+                                itemValue="#{category}" />
+                            <f:attribute 
+                                name="collectionType" 
+                                value="java.util.ArrayList" />
+                        </p:selectManyCheckbox>
+                    </p:scrollPanel>
+                </p:panelGrid>
+                <!--descricao valor categorias-->
+                <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
+                    <p:commandButton
+                        id="remove"
+                        disabled="#{empty produtoBean.selectedProduto.id}"
+                        title="#{i18n.remove}"
+                        icon="pi pi-trash"
+                        process="@this"
+                        action="#{produtoBean.removeCurrent()}"
+                        oncomplete="PF('dlg2').hide()"
+                        update=":formProducts:productsTable"
+                        styleClass="rounded-button ui-button-danger">
+                        <p:confirm
+                            type="popup"
+                            header="#{i18n.confirmation}"
+                            message="#{i18n.excludemsg}"
+                            icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+
+                    &nbsp;
+
+                    <!--Cancel operation-->
+                    <p:commandButton
+                        id="cancel"
+                        title="#{i18n.cancel}"
+                        icon="pi pi-times"
+                        oncomplete="PF('dlg2').hide()"
+                        style="color: white;"
+                        styleClass="rounded-button ui-button-info" />
+
+                    &nbsp;
+
+                    <!--Save Task-->
+                    <p:commandButton
+                        id="save"
+                        title="#{i18n.save}"
+                        icon="pi pi-save"
+                        process="@form"
+                        action="#{produtoBean.saveCurrent()}"
+                        oncomplete="PF('dlg2').hide()"
+                        update=":formProducts:productsTable"
+                        styleClass="rounded-button ui-button-success" />
+                </h:panelGroup>
+
+                <p:confirmPopup 
+                    global="true">
+                    <p:commandButton 
+                        value="#{i18n.no}" 
+                        type="button" 
+                        styleClass="ui-confirm-popup-no ui-button-success"/>
+                    <p:commandButton 
+                        value="#{i18n.yes}" 
+                        type="button" 
+                        styleClass="ui-confirm-popup-yes ui-button-danger" />
+                </p:confirmPopup>
+
+                <p:blockUI
+                    block="editAddProduct"
+                    trigger="save">
+                    <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+                </p:blockUI>
+
+                <h:messages />
+
+            </h:form>
+        </p:dialog>
     </ui:define>
 </ui:composition>
 

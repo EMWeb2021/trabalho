@@ -10,6 +10,10 @@
             <default-locale>pt-BR</default-locale>
             <supported-locale>en</supported-locale>
         </locale-config>
+        <resource-bundle>
+            <base-name>msgs.i18n</base-name>
+            <var>i18n</var>
+        </resource-bundle>
     </application>
     
 </faces-config>

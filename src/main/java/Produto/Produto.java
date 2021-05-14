@@ -8,6 +8,7 @@ package Produto;
 import ItemPedido.ItemPedido;
 import Categoria.Categoria;
 import Entidade.JpaEntity;
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotEmpty;
+import org.primefaces.model.file.UploadedFile;
 
 /**
  *
@@ -57,6 +59,7 @@ public class Produto extends JpaEntity implements Serializable {
     @Column(nullable = false, length = 150)
     @NotEmpty
     private String nome;
+    
     
     @Column(nullable = false, length = 300)
     @NotEmpty
@@ -93,6 +96,8 @@ public class Produto extends JpaEntity implements Serializable {
         categorias = new ArrayList<Categoria>();
         itensPedidos = new ArrayList<ItemPedido>();
     }
+
+ 
     
     public String getNome() {
         return nome;
