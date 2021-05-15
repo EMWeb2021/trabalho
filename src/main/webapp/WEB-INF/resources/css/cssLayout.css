@@ -74,3 +74,31 @@ div#conteudo > main {
     overflow: auto;
     max-height: 100%;
 }
+
+.container_p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 500px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.container_e {
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items:flex-start;
+    width: 400px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+.container_Empresa {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #e85d04;
+    color: #370617;
+    font-weight: 500;
+    font-size: 18px;
+}

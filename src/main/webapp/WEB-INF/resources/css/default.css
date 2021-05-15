@@ -22,7 +22,7 @@ header {
 }
 
 main {
-    background-color: #dddddd;
+    background-color: white;
    
 
 }
@@ -31,6 +31,7 @@ footer {
     /*position: relative;*/
     
     background-color: #c2dfef;
+    margin-bottom: 0;
 }
 
 body .ui-panelgrid .ui-panelgrid-cell {
