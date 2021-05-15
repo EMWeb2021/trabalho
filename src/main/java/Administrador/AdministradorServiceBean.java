@@ -75,7 +75,7 @@ public class AdministradorServiceBean implements AdministradorServiceBeanLocal {
     @Override
     public Administrador findAdministradorById(Long id) {
         return entityManager
-                .createNamedQuery("administrador.findCategoriaById", Administrador.class)
+                .createNamedQuery("administrador.findAdministradorById", Administrador.class)
                 .setParameter("id", id)
                 .getSingleResult();
     }

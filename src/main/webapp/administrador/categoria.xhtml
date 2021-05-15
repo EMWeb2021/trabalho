@@ -10,100 +10,12 @@
     xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
     >
     <ui:define name="main">
-        <p:accordionPanel
-            activeIndex="-1"
-            id="accNewCategory"
-            widgetVar="accNewCategory"
-            >
-
-            <p:ajax 
-                event="tabClose"
-                listener="#{categoriaBean.reset()}"
-                update=":accNewCategory:editAddCategory"
-                />
-
-            <p:tab
-                titleStyle="font-size:.85em;"
-                id="category"
-                title="#{i18n.category}"
-                >
-
-                <h:form id="editAddCategory">
-                    <p:panelGrid
-                        columns="2"
-                        styleClass="ui-noborder">
-                        <p:outputLabel for="name" value="#{i18n.name}"/>
-                        <p:inputText id="name" value="#{categoriaBean.selectedCategoria.nome}" styleClass="description" maxlength="50" />
-                    </p:panelGrid>
-
-                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
-                        <p:commandButton
-                            id="remove"
-                            disabled="#{empty categoriaBean.selectedCategoria.id}"
-                            title="#{i18n.remove}"
-                            icon="pi pi-trash"
-                            process="@this"
-                            action="#{categoriaBean.removeCurrent()}"
-                            oncomplete="PF('accNewCategory').unselect(0)"
-                            update=":formCategories:categoriesTable"
-                            styleClass="rounded-button ui-button-danger">
-                            <p:confirm
-                                type="popup"
-                                header="#{i18n.confirmation}"
-                                message="#{i18n.excludemsg}"
-                                icon="pi pi-exclamation-triangle" />
-                        </p:commandButton>
-
-                        &nbsp;
-
-                        <!--Cancel operation-->
-                        <p:commandButton
-                            id="cancel"
-                            title="#{i18n.cancel}"
-                            icon="pi pi-times"
-                            oncomplete="PF('accNewCategory').unselect(0)"
-                            style="color: white;"
-                            styleClass="rounded-button ui-button-info" />
-
-                        &nbsp;
-
-                        <!--Save Task-->
-                        <p:commandButton
-                            id="save"
-                            title="#{i18n.save}"
-                            icon="pi pi-save"
-                            process="@form"
-                            action="#{categoriaBean.saveCurrent()}"
-                            oncomplete="PF('accNewCategory').unselect(0)"
-                            update=":formCategories:categoriesTable"
-                            styleClass="rounded-button ui-button-success" />
-                    </h:panelGroup>
-
-                    <p:confirmPopup 
-                        global="true">
-                        <p:commandButton 
-                            value="#{i18n.no}" 
-                            type="button" 
-                            styleClass="ui-confirm-popup-no ui-button-success"/>
-                        <p:commandButton 
-                            value="#{i18n.yes}" 
-                            type="button" 
-                            styleClass="ui-confirm-popup-yes ui-button-danger" />
-                    </p:confirmPopup>
-
-                    <p:blockUI
-                        block="editAddCategory"
-                        trigger="save">
-                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
-                    </p:blockUI>
-
-                    <h:messages />
-
-                </h:form>
-
-            </p:tab>
-
-        </p:accordionPanel>
+        
+        <div class="menu-add">
+            <p:commandButton styleClass="buttonLogout" value="Adicionar categoria" type="button" icon="fas fa-plus" onclick="PF('dlg2').show()"/>
+        </div>
+        
+        
         <h:form id="formCategories">
             <p:dataTable
                 id="categoriesTable"
@@ -154,9 +66,9 @@
                         icon="pi pi-pencil" 
                         process="@this"
                         onstart="$('html, body').animate({ scrollTop: 0 }, 'slow')"
-                        oncomplete="PF('accNewCategory').select(0)"
+                        oncomplete="PF('dlg2').show()"
                         actionListener="#{categoriaBean.loadCategoria(category)}"
-                        update=":accNewCategory:editAddCategory"
+                        update=":editAddCategory"
                         styleClass="rounded-button ui-button-help">
                         
                     </p:commandButton>&nbsp;
@@ -194,6 +106,88 @@
                     styleClass="ui-confirm-popup-yes ui-button-danger" />
             </p:confirmPopup>
         </h:form>
+        
+        <p:dialog 
+            header="Adicionar categoria" 
+            widgetVar="dlg2" 
+            showEffect="fade" 
+            modal="true"
+            onHide="#{categoriaBean.reset()}"
+            > 
+             <h:form id="editAddCategory">
+                    <p:panelGrid
+                        columns="2"
+                        styleClass="ui-noborder">
+                        <p:outputLabel for="name" value="#{i18n.name}"/>
+                        <p:inputText id="name" value="#{categoriaBean.selectedCategoria.nome}" styleClass="description" maxlength="50" />
+                    </p:panelGrid>
+
+                    <h:panelGroup  style="display: flex; justify-content: center; margin-top: .5em;">
+                        <p:commandButton
+                            id="remove"
+                            disabled="#{empty categoriaBean.selectedCategoria.id}"
+                            title="#{i18n.remove}"
+                            icon="pi pi-trash"
+                            process="@this"
+                            action="#{categoriaBean.removeCurrent()}"
+                            oncomplete="PF('dlg2').hide()"
+                            update=":formCategories:categoriesTable"
+                            styleClass="rounded-button ui-button-danger">
+                            <p:confirm
+                                type="popup"
+                                header="#{i18n.confirmation}"
+                                message="#{i18n.excludemsg}"
+                                icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+
+                        &nbsp;
+
+                        <!--Cancel operation-->
+                        <p:commandButton
+                            id="cancel"
+                            title="#{i18n.cancel}"
+                            icon="pi pi-times"
+                             oncomplete="PF('dlg2').hide()"
+                            style="color: white;"
+                            styleClass="rounded-button ui-button-info" />
+
+                        &nbsp;
+
+                        <!--Save Task-->
+                        <p:commandButton
+                            id="save"
+                            title="#{i18n.save}"
+                            icon="pi pi-save"
+                            process="@form"
+                            action="#{categoriaBean.saveCurrent()}"
+                            oncomplete="PF('dlg2').hide()"
+                            update=":formCategories:categoriesTable"
+                            styleClass="rounded-button ui-button-success" />
+                    </h:panelGroup>
+
+                    <p:confirmPopup 
+                        global="true">
+                        <p:commandButton 
+                            value="#{i18n.no}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-no ui-button-success"/>
+                        <p:commandButton 
+                            value="#{i18n.yes}" 
+                            type="button" 
+                            styleClass="ui-confirm-popup-yes ui-button-danger" />
+                    </p:confirmPopup>
+
+                    <p:blockUI
+                        block="editAddCategory"
+                        trigger="save">
+                        <i class="pi pi-spin pi-spinner" style="font-size: 3rem" />
+                    </p:blockUI>
+
+                    <h:messages />
+
+                </h:form>
+            
+        </p:dialog>
     </ui:define>
 </ui:composition>
 

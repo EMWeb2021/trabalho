@@ -19,8 +19,7 @@ public class ProdutoServiceBean implements ProdutoServiceBeanLocal {
 
     @PersistenceContext
     private EntityManager entityManager;
-    
-    
+
     @Override
     public void save(Produto produto) {
         if (entityManager.contains(produto)) {
@@ -34,7 +33,7 @@ public class ProdutoServiceBean implements ProdutoServiceBeanLocal {
         } else {
             // Create new
             System.out.println("ProdutoServiceBean::save[S].task => " + produto);
-            
+
             // entityManager.persist(task);
             // Forces the merge to all related entities
             // (CascadeType.ALL) and avoids an exception.
@@ -45,7 +44,17 @@ public class ProdutoServiceBean implements ProdutoServiceBeanLocal {
 
     @Override
     public void delete(Produto produto) {
-       entityManager.remove(produto);
+        System.out.println("Removendo produto");
+        try {
+            if(entityManager.contains(produto)){
+                entityManager.remove(produto);
+            }else{
+                Produto aux = entityManager.getReference(produto.getClass(), produto.getId());
+                entityManager.remove(aux);
+            }
+        } catch (Exception error) {
+            System.out.println("DEU ERRO NESSA BOSTA " + error);
+        }
     }
 
     @Override
@@ -63,5 +72,4 @@ public class ProdutoServiceBean implements ProdutoServiceBeanLocal {
                 .getSingleResult();
     }
 
-   
 }
